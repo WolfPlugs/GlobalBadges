@@ -1,0 +1,14 @@
+.global-badges-container {
+  min-height: -webkit-fit-content;
+  min-height: -moz-fit-content;
+  min-height: fit-content;
+}
+
+.global-badge {
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.global-badge:before {
+  display: none !important;
+}
