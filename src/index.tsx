@@ -35,9 +35,9 @@ interface CustomBadges {
         url: {
           dark: string;
           light: string;
-        }
+        };
       };
-    }
+    };
   };
   goosemod: {
     sponsor: boolean;
@@ -64,7 +64,6 @@ export async function start(): Promise<void> {
     throw new Error("Could not find badges function");
   }
   const Badge = await getBadges();
-
 
   inject.after(
     mod,
@@ -116,8 +115,8 @@ async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadge
     const body = (await res.json()) as CustomBadges;
     const result: BadgeCache =
       res.status === 200 || res.status === 404
-    ? { badges: body  || {}, lastFetch: Date.now() }
-    : (cache.delete(id), { badges: body, lastFetch: Date.now() });
+        ? { badges: body || {}, lastFetch: Date.now() }
+        : (cache.delete(id), { badges: body, lastFetch: Date.now() });
 
     cache.set(id, result);
   }
@@ -125,9 +124,8 @@ async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadge
   setBadges(cache.get(id)?.badges || null);
   return cache.get(id)!.badges;
 }
- 
-function getBadgeselements(badges: CustomBadges, Badge: any)  {
 
+function getBadgeselements(badges: CustomBadges, Badge: any) {
   const badgeTypes = [
     { condition: badges.aliu.dev, element: <Badge.aliucordDeveloper /> },
     { condition: badges.aliu.contributor, element: <Badge.alucordContributors /> },
@@ -137,7 +135,15 @@ function getBadgeselements(badges: CustomBadges, Badge: any)  {
       element: <Badge.aliucordCustom url={badges.aliu.custom.url} name={badges.aliu.custom.text} />,
     },
     { condition: badges.bd.dev, element: <Badge.bdDevs /> },
-    { condition: badges.enmity && badges.enmity.supporter, element: <Badge.enmityDevs url={badges.enmity?.supporter?.data.url.dark} name={badges.enmity?.supporter?.data.name} /> },
+    {
+      condition: badges.enmity && badges.enmity.supporter,
+      element: (
+        <Badge.enmityDevs
+          url={badges.enmity?.supporter?.data.url.dark}
+          name={badges.enmity?.supporter?.data.name}
+        />
+      ),
+    },
     { condition: badges.goosemod.dev, element: <Badge.gooseModDeveloper /> },
     { condition: badges.goosemod.sponsor, element: <Badge.gooseModSponsor /> },
     { condition: badges.goosemod.translator, element: <Badge.gooseModTranslator /> },

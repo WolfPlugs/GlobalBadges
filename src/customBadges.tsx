@@ -110,8 +110,6 @@ type Badges =
   | "gooseModDeveloper"
   | "gooseModTranslator";
 
-
-
 export const getBadges = async (): Promise<
   Record<Badges, React.MemoExoticComponent<(args: BadgeArgs) => React.ReactElement>>
 > => {
@@ -184,15 +182,39 @@ export const getBadges = async (): Promise<
   ));
 
   const gooseModSponsor = React.memo(() => (
-    <Base children={<img src='https://goosemod.com/img/goose_globe.png' style={{ width: "100%", height: "100%" }} />} tooltip={"GooseMod Sponsor"} />
+    <Base
+      children={
+        <img
+          src="https://goosemod.com/img/goose_globe.png"
+          style={{ width: "100%", height: "100%" }}
+        />
+      }
+      tooltip={"GooseMod Sponsor"}
+    />
   ));
 
   const gooseModDeveloper = React.memo(() => (
-    <Base children={<img src='https://goosemod.com/img/goose_glitch.jpg' style={{ width: "100%", height: "100%" }} />} tooltip={"GooseMod Developer"} />
+    <Base
+      children={
+        <img
+          src="https://goosemod.com/img/goose_glitch.jpg"
+          style={{ width: "100%", height: "100%" }}
+        />
+      }
+      tooltip={"GooseMod Developer"}
+    />
   ));
 
   const gooseModTranslator = React.memo(() => (
-    <Base children={<img src='https://goosemod.com/img/goose_globe.png' style={{ width: "100%", height: "100%" }} />} tooltip={"GooseMod Translator"} />
+    <Base
+      children={
+        <img
+          src="https://goosemod.com/img/goose_globe.png"
+          style={{ width: "100%", height: "100%" }}
+        />
+      }
+      tooltip={"GooseMod Translator"}
+    />
   ));
 
   return {
