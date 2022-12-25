@@ -15,15 +15,14 @@ type BadgeMod = (args: BadgeArgs) => React.ReactElement<{
 }>;
 
 interface CustomBadges {
-  [key: string]: any;
   aliu: {
     dev: boolean;
     donor: boolean;
     contributor: boolean;
     custom: {
       url: string;
-      name: string;
-    } | boolean;
+      text: string;
+    };
   };
   bd: {
     dev: boolean;
@@ -59,6 +58,7 @@ export async function start(): Promise<void> {
   const mod = await webpack.waitForModule<Record<string, BadgeMod>>(
     webpack.filters.bySource(".GUILD_BOOSTER_LEVEL_1,"),
   );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fnPropName = Object.entries(mod).find(([_, v]) => typeof v === "function")?.[0];
   if (!fnPropName) {
     throw new Error("Could not find badges function");
@@ -113,12 +113,11 @@ export async function start(): Promise<void> {
 async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadges> {
   if (!cache.has(id) || cache.get(id)!.lastFetch < Date.now() - REFRESH_INTERVAL) {
     const res = await fetch(`https://api.obamabot.me/v2/text/badges?user=${id}`);
-    const body = (await res.json()) as Record<string, unknown> & { badges: CustomBadges };
-
+    const body = (await res.json()) as CustomBadges;
     const result: BadgeCache =
       res.status === 200 || res.status === 404
-        ? { badges: body || {}, lastFetch: Date.now() }
-        : (cache.delete(id), { badges: {}, lastFetch: Date.now() });
+    ? { badges: body  || {}, lastFetch: Date.now() }
+    : (cache.delete(id), { badges: body, lastFetch: Date.now() });
 
     cache.set(id, result);
   }
@@ -135,7 +134,7 @@ function getBadgeselements(badges: CustomBadges, Badge: any)  {
     { condition: badges.aliu.donor, element: <Badge.aliucordDonor /> },
     {
       condition: typeof badges.aliu.custom === "object" && badges.aliu.custom != null,
-      element: <Badge.aliucordCustom url={badges.aliu.custom?.url} name={badges.aliu.custom?.text} />,
+      element: <Badge.aliucordCustom url={badges.aliu.custom.url} name={badges.aliu.custom.text} />,
     },
     { condition: badges.bd.dev, element: <Badge.bdDevs /> },
     { condition: badges.enmity && badges.enmity.supporter, element: <Badge.enmityDevs url={badges.enmity?.supporter?.data.url.dark} name={badges.enmity?.supporter?.data.name} /> },
