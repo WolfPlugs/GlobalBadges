@@ -1,5 +1,5 @@
 import { User } from "discord-types/general";
-import { Injector, webpack, common } from "replugged";
+import { Injector, common, webpack } from "replugged";
 import { getBadges } from "./customBadges";
 const { React } = common;
 const inject = new Injector();
@@ -65,6 +65,7 @@ export async function start(): Promise<void> {
   }
   const Badge = await getBadges();
 
+
   inject.after(
     mod,
     fnPropName,
@@ -80,26 +81,9 @@ export async function start(): Promise<void> {
 
       const [badges, setBadges] = React.useState<CustomBadges | null>(null);
 
-      async function fetchBadges(id: string): Promise<CustomBadges> {
-        if (!cache.has(id) || cache.get(id)!.lastFetch < Date.now() - REFRESH_INTERVAL) {
-          const res = await fetch(`https://api.obamabot.me/v2/text/badges?user=${id}`);
-          const body = (await res.json()) as Record<string, unknown> & { badges: CustomBadges };
-
-          const result: BadgeCache =
-            res.status === 200 || res.status === 404
-              ? { badges: body || {}, lastFetch: Date.now() }
-              : (cache.delete(id), { badges: {}, lastFetch: Date.now() });
-
-          cache.set(id, result);
-        }
-
-        setBadges(cache.get(id)?.badges || null);
-        return cache.get(id)!.badges;
-      }
-
       React.useEffect(() => {
         (async () => {
-          await fetchBadges(id);
+          await fetchBadges(id, setBadges);
         })();
       }, []);
 
@@ -110,29 +94,7 @@ export async function start(): Promise<void> {
         string
       >;
 
-      const badgeTypes = [
-        { condition: badges.aliu.dev, element: <Badge.aliucordDeveloper /> },
-        { condition: badges.aliu.contributor, element: <Badge.alucordContributors /> },
-        { condition: badges.aliu.donor, element: <Badge.aliucordDonor /> },
-        {
-          condition: typeof badges.aliu.custom === "object" && badges.aliu.custom != null,
-          element: <Badge.aliucordCustom url={badges.aliu.custom?.url} name={badges.aliu.custom?.text} />,
-        },
-        { condition: badges.bd.dev, element: <Badge.bdDevs /> },
-        { condition: badges.enmity && badges.enmity.supporter, element: <Badge.enmityDevs url={badges.enmity?.supporter?.data.url.dark} name={badges.enmity?.supporter?.data.name} /> },
-        { condition: badges.goosemod.dev, element: <Badge.gooseModDeveloper /> },
-        { condition: badges.goosemod.sponsor, element: <Badge.gooseModSponsor /> },
-        { condition: badges.goosemod.translator, element: <Badge.gooseModTranslator /> },
-      ];
-      
-      badgeTypes.forEach(({ condition, element }) => {
-        if (condition) {
-          res.props.children.push(element);
-        }
-      });
-      
-
-      
+      res.props.children = [...res.props.children, ...getBadgeselements(badges, Badge)];
 
       if (res.props.children.length > 0) {
         if (!res.props.className.includes(containerWithContent)) {
@@ -146,6 +108,43 @@ export async function start(): Promise<void> {
       return res;
     },
   );
+}
+
+async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadges> {
+  if (!cache.has(id) || cache.get(id)!.lastFetch < Date.now() - REFRESH_INTERVAL) {
+    const res = await fetch(`https://api.obamabot.me/v2/text/badges?user=${id}`);
+    const body = (await res.json()) as Record<string, unknown> & { badges: CustomBadges };
+
+    const result: BadgeCache =
+      res.status === 200 || res.status === 404
+        ? { badges: body || {}, lastFetch: Date.now() }
+        : (cache.delete(id), { badges: {}, lastFetch: Date.now() });
+
+    cache.set(id, result);
+  }
+
+  setBadges(cache.get(id)?.badges || null);
+  return cache.get(id)!.badges;
+}
+ 
+function getBadgeselements(badges: CustomBadges, Badge: any)  {
+
+  const badgeTypes = [
+    { condition: badges.aliu.dev, element: <Badge.aliucordDeveloper /> },
+    { condition: badges.aliu.contributor, element: <Badge.alucordContributors /> },
+    { condition: badges.aliu.donor, element: <Badge.aliucordDonor /> },
+    {
+      condition: typeof badges.aliu.custom === "object" && badges.aliu.custom != null,
+      element: <Badge.aliucordCustom url={badges.aliu.custom?.url} name={badges.aliu.custom?.text} />,
+    },
+    { condition: badges.bd.dev, element: <Badge.bdDevs /> },
+    { condition: badges.enmity && badges.enmity.supporter, element: <Badge.enmityDevs url={badges.enmity?.supporter?.data.url.dark} name={badges.enmity?.supporter?.data.name} /> },
+    { condition: badges.goosemod.dev, element: <Badge.gooseModDeveloper /> },
+    { condition: badges.goosemod.sponsor, element: <Badge.gooseModSponsor /> },
+    { condition: badges.goosemod.translator, element: <Badge.gooseModTranslator /> },
+  ];
+
+  return badgeTypes.filter(({ condition }) => condition).map(({ element }) => element);
 }
 
 export function stop(): void {
