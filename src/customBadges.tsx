@@ -133,10 +133,7 @@ export const getBadges = async (): Promise<
   ));
 
   const alucordContributors = React.memo(() => (
-    <Base
-      children={<Badges.aliucordContributor />}
-      tooltip={"Aliucord Contributor"}
-    />
+    <Base children={<Badges.aliucordContributor />} tooltip={"Aliucord Contributor"} />
   ));
 
   const aliucordDonor = React.memo(() => (
@@ -152,10 +149,7 @@ export const getBadges = async (): Promise<
   ));
 
   const aliucordDeveloper = React.memo(() => (
-    <Base
-      children={<Badges.aliucordDeveloper />}
-      tooltip={"Aliucord Developer"}
-    />
+    <Base children={<Badges.aliucordDeveloper />} tooltip={"Aliucord Developer"} />
   ));
 
   const enmityDevs = React.memo(({ url, name }: BadgeArgs) => (
