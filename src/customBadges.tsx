@@ -34,15 +34,15 @@ export const getBadgeComponent = async (): Promise<(args: BadgeProps) => React.R
     webpack.filters.bySource(/shouldShowTooltip:!1/),
   );
 
-  // todo: common component
   const Tooltip =
     tooltipMod && webpack.getFunctionBySource<Tooltip>(/shouldShowTooltip:!1/, tooltipMod);
   if (!Tooltip) {
     throw new Error("Failed to find Tooltip component");
   }
 
-  // todo: common component
-  const Clickable = webpack.getBySource("renderNonInteractive") as Clickable | undefined;
+  const Clickable = (await webpack
+    .waitForModule(webpack.filters.bySource("renderNonInteractive"))
+    .then((mod) => Object.values(mod).find((x) => x.prototype?.renderNonInteractive))) as Clickable;
   if (!Clickable) {
     throw new Error("Failed to find Clickable component");
   }
@@ -136,7 +136,6 @@ export const getBadges = async (): Promise<
     <Base
       children={<Badges.aliucordContributor />}
       tooltip={"Aliucord Contributor"}
-      onClick={() => openExternal("https://alucord.dev/")}
     />
   ));
 
@@ -149,7 +148,6 @@ export const getBadges = async (): Promise<
         />
       }
       tooltip={"Aliucord Donor"}
-      onClick={() => openExternal("https://alucord.dev/")}
     />
   ));
 
@@ -157,7 +155,6 @@ export const getBadges = async (): Promise<
     <Base
       children={<Badges.aliucordDeveloper />}
       tooltip={"Aliucord Developer"}
-      onClick={() => openExternal("https://alucord.dev/")}
     />
   ));
 
