@@ -1,13 +1,13 @@
 {
   "id": "dev.wolfplugs.globalbadges",
-  "name": "Global badges",
+  "name": "Global Badges",
   "description": "Add badges from other clients and DB to your profile or other users' profiles.",
   "author": {
     "name": "Wolfie",
     "discordID": "347096063569559553",
     "github": "WolfPlugs"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "updater": {
     "type": "github",
     "id": "WolfPlugs/GlobalBadges"
