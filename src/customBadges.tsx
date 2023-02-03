@@ -1,7 +1,8 @@
-import { common, webpack } from "replugged";
+import { common, components, webpack } from "replugged";
 import "./style.css";
 import Badges from "./Icons";
 const { React } = common;
+const { Tooltip, Clickable } = components;
 
 type Tooltip = React.FC<{
   text?: string;
@@ -29,32 +30,15 @@ interface BadgeProps {
   onClick?: () => void;
 }
 
-export const getBadgeComponent = async (): Promise<(args: BadgeProps) => React.ReactElement> => {
-  const tooltipMod = await webpack.waitForModule<Record<string, Tooltip>>(
-    webpack.filters.bySource(/shouldShowTooltip:!1/),
-  );
-
-  const Tooltip =
-    tooltipMod && webpack.getFunctionBySource<Tooltip>(/shouldShowTooltip:!1/, tooltipMod);
-  if (!Tooltip) {
-    throw new Error("Failed to find Tooltip component");
-  }
-
-  const Clickable = (await webpack
-    .waitForModule(webpack.filters.bySource("renderNonInteractive"))
-    .then((mod) => Object.values(mod).find((x) => x.prototype?.renderNonInteractive))) as Clickable;
-  if (!Clickable) {
-    throw new Error("Failed to find Clickable component");
-  }
-
-  const clickableClass = webpack.getByProps<
-    "clickable" | "profileBadge",
-    Record<"clickable" | "profileBadge", string>
-  >("clickable", "profileBadge");
-  if (!clickableClass) {
-    throw new Error("Failed to find clickable class");
-  }
-
+export const Base = ({
+  color,
+  tooltip,
+  tooltipPosition,
+  className,
+  children,
+  gap,
+  onClick,
+}: BadgeProps): React.ReactElement => {
   const badgeClassMod = webpack.getByProps<
     "profileBadge22",
     {
@@ -65,28 +49,28 @@ export const getBadgeComponent = async (): Promise<(args: BadgeProps) => React.R
     throw new Error("Failed to find badge class");
   }
   const { profileBadge22 } = badgeClassMod;
-
-  return ({ color, tooltip, tooltipPosition, className, children, gap, onClick }: BadgeProps) => {
-    return (
-      // eslint-disable-next-line no-undefined
-      <Clickable className={clickableClass.clickable} onClick={onClick || (() => undefined)}>
+  const child = (
+    <div
+      className={`${profileBadge22} replugged-badge ${className || ""}`}
+      style={{ color: `#${color || "7289da"}` }}>
+      {children}
+    </div>
+  );
+  return (
+    // eslint-disable-next-line no-undefined
+    <Clickable onClick={onClick || (() => undefined)}>
+      {tooltip ? (
         <Tooltip
           text={tooltip}
           position={tooltipPosition || "top"}
           spacing={gap === false ? 0 : 12}>
-          {(props) => (
-            <span {...props}>
-              <div
-                className={`${profileBadge22} replugged-badge ${className || ""}`}
-                style={{ color: `#${color || "7289da"}` }}>
-                {children}
-              </div>
-            </span>
-          )}
+          {child}
         </Tooltip>
-      </Clickable>
-    );
-  };
+      ) : (
+        child
+      )}
+    </Clickable>
+  );
 };
 
 interface BadgeArgs {
@@ -113,8 +97,6 @@ type Badges =
 export const getBadges = async (): Promise<
   Record<Badges, React.MemoExoticComponent<(args: BadgeArgs) => React.ReactElement>>
 > => {
-  const Base = await getBadgeComponent();
-
   const openExternal = webpack.getBySource('.target="_blank";') as (url: string) => Promise<void>;
   if (!openExternal) {
     throw new Error("Failed to find openExternal function");
