@@ -12,7 +12,6 @@ Shows users awesome profile badges on their profile page.
 - Finish Enmity Badges
 
 ## Installation
-- Download the latest release from the [releases page](https://github.com/WolfPlugs/GlobalBadges/releases/latest/download/dev.wolfplugs.globalbadges.asar)
-- Move it to your [plugins folder](https://github.com/replugged-org/replugged#installing-plugins-and-themes)
+- Download the latest release directly here [![Install in Replugged](https://img.shields.io/badge/-Install%20in%20Replugged-blue?style=for-the-badge&logo=none)](https://replugged.dev/install?identifier=dev.wolfplugs.globalbadges&source=github)
 
 
