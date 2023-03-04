@@ -5,10 +5,10 @@ Shows users awesome profile badges on their profile page.
 - Aliucord Badges
 - Better Discord Badge
 - GooseMod Badges
+- Custom Badges DB (get the badges here: [Discord](https://discord.gg/eTvYv95PCG "My Official Server"))
 
 ## Planned Features
 - Add Replugged Badges
-- Create Custom Badge DB
 - Finish Enmity Badges
 
 ## Installation

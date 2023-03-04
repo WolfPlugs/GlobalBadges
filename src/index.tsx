@@ -15,6 +15,10 @@ type BadgeMod = (args: BadgeArgs) => React.ReactElement<{
 }>;
 
 interface CustomBadges {
+  customBadgesArray: {
+    badge: string;
+    name: string;
+  };
   aliu: {
     dev: boolean;
     donor: boolean;
@@ -127,6 +131,15 @@ async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadge
 
 function getBadgeselements(badges: CustomBadges, Badge: any) {
   const badgeTypes = [
+    {
+      condition: badges.customBadgesArray,
+      element: (
+        <Badge.customBadgesArray
+          url={badges.customBadgesArray.badge}
+          name={badges.customBadgesArray.name}
+        />
+      ),
+    },
     { condition: badges.aliu.dev, element: <Badge.aliucordDeveloper /> },
     { condition: badges.aliu.contributor, element: <Badge.alucordContributors /> },
     { condition: badges.aliu.donor, element: <Badge.aliucordDonor /> },

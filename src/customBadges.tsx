@@ -81,6 +81,7 @@ interface BadgeArgs {
 
 type Badges =
   | "bdDevs"
+  | "customBadgesArray"
   | "alucordContributors"
   | "aliucordDonor"
   | "aliucordDeveloper"
@@ -101,6 +102,10 @@ export const getBadges = async (): Promise<
   if (!openExternal) {
     throw new Error("Failed to find openExternal function");
   }
+
+  const customBadgesArray = React.memo(({ url, name }: BadgeArgs) => (
+    <Base children={<img src={url} style={{ width: "125%", height: "125%" }} />} tooltip={name} />
+  ));
 
   const aliucordCustom = React.memo(({ url, name }: BadgeArgs) => (
     <Base children={<img src={url} style={{ width: "100%", height: "100%" }} />} tooltip={name} />
@@ -192,6 +197,7 @@ export const getBadges = async (): Promise<
 
   return {
     bdDevs,
+    customBadgesArray,
     alucordContributors,
     aliucordDonor,
     aliucordDeveloper,
