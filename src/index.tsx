@@ -42,6 +42,36 @@ interface CustomBadges {
         };
       };
     };
+    staff: {
+      data: {
+        name: string;
+        id: string;
+        url: {
+          dark: string;
+          light: string;
+        };
+      };
+    };
+    dev: {
+      data: {
+        name: string;
+        id: string;
+        url: {
+          dark: string;
+          light: string;
+        };
+      };
+    };
+    contributor: {
+      data: {
+        name: string;
+        id: string;
+        url: {
+          dark: string;
+          light: string;
+        };
+      };
+    };
   };
   goosemod: {
     sponsor: boolean;
@@ -97,7 +127,7 @@ export async function start(): Promise<void> {
         string
       >;
 
-      res.props.children = [...res.props.children, ...getBadgeselements(badges, Badge)];
+      res.props.children = [...res.props.children, ...getBadgeselements(badges, Badge, id)];
 
       if (res.props.children.length > 0) {
         if (!res.props.className.includes(containerWithContent)) {
@@ -129,7 +159,8 @@ async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadge
   return cache.get(id)!.badges;
 }
 
-function getBadgeselements(badges: CustomBadges, Badge: any) {
+function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
+  console.log('it works', badges)
   const badgeTypes = [
     {
       condition: badges.customBadgesArray,
@@ -149,13 +180,26 @@ function getBadgeselements(badges: CustomBadges, Badge: any) {
     },
     { condition: badges.bd.dev, element: <Badge.bdDevs /> },
     {
-      condition: badges.enmity && badges.enmity.supporter,
-      element: (
-        <Badge.enmityDevs
-          url={badges.enmity?.supporter?.data.url.dark}
-          name={badges.enmity?.supporter?.data.name}
-        />
-      ),
+      condition: badges.enmity?.supporter,
+      element: ( <Badge.enmityDevs url={badges.enmity?.supporter?.data.url.dark} name={badges.enmity?.supporter?.data.name} /> ),
+    },
+    {
+      condition: badges.enmity?.staff,
+      element: ( <Badge.enmityDevs url={badges.enmity?.staff?.data.url.dark} name={badges.enmity?.staff?.data.name} /> ),
+    },
+    {
+      condition: badges.enmity?.dev,
+      element: ( <Badge.enmityDevs url={badges.enmity?.dev?.data.url.dark} name={badges.enmity?.dev?.data.name} /> ),
+    },
+    {
+      condition: badges.enmity?.contributor,
+      element: ( <Badge.enmityDevs url={badges.enmity?.contributor?.data.url.dark} name={badges.enmity?.contributor?.data.name} /> ),
+    },
+    {
+      // @ts-ignore
+      condition: badges.enmity[id]?.data?.name,
+      // @ts-ignore
+      element: ( <Badge.enmityDevs url={badges.enmity[id]?.data?.url.dark} name={badges.enmity[id]?.data?.name} /> ),
     },
     { condition: badges.goosemod.dev, element: <Badge.gooseModDeveloper /> },
     { condition: badges.goosemod.sponsor, element: <Badge.gooseModSponsor /> },
