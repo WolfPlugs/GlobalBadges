@@ -160,7 +160,6 @@ async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadge
 }
 
 function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
-  console.log('it works', badges)
   const badgeTypes = [
     {
       condition: badges.customBadgesArray,
