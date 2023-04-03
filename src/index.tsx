@@ -78,6 +78,13 @@ interface CustomBadges {
     dev: boolean;
     translator: boolean;
   };
+  vencord: {
+    contributor: boolean;
+    cutie: {
+      tooltip: string;
+      image: string;
+    };
+  };
 }
 
 type BadgeCache = {
@@ -111,7 +118,6 @@ export async function start(): Promise<void> {
       res,
     ) => {
       if (!res?.props?.children) return res;
-
       const [badges, setBadges] = React.useState<CustomBadges | null>(null);
 
       React.useEffect(() => {
@@ -160,6 +166,7 @@ async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadge
 }
 
 function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
+  console.log(badges.vencord?.cutie?.image);
   const badgeTypes = [
     {
       condition: badges.customBadgesArray,
@@ -180,29 +187,64 @@ function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
     { condition: badges.bd.dev, element: <Badge.bdDevs /> },
     {
       condition: badges.enmity?.supporter,
-      element: ( <Badge.enmityDevs url={badges.enmity?.supporter?.data.url.dark} name={badges.enmity?.supporter?.data.name} /> ),
+      element: (
+        <Badge.enmityDevs
+          url={badges.enmity?.supporter?.data.url.dark}
+          name={badges.enmity?.supporter?.data.name}
+        />
+      ),
     },
     {
       condition: badges.enmity?.staff,
-      element: ( <Badge.enmityDevs url={badges.enmity?.staff?.data.url.dark} name={badges.enmity?.staff?.data.name} /> ),
+      element: (
+        <Badge.enmityDevs
+          url={badges.enmity?.staff?.data.url.dark}
+          name={badges.enmity?.staff?.data.name}
+        />
+      ),
     },
     {
       condition: badges.enmity?.dev,
-      element: ( <Badge.enmityDevs url={badges.enmity?.dev?.data.url.dark} name={badges.enmity?.dev?.data.name} /> ),
+      element: (
+        <Badge.enmityDevs
+          url={badges.enmity?.dev?.data.url.dark}
+          name={badges.enmity?.dev?.data.name}
+        />
+      ),
     },
     {
       condition: badges.enmity?.contributor,
-      element: ( <Badge.enmityDevs url={badges.enmity?.contributor?.data.url.dark} name={badges.enmity?.contributor?.data.name} /> ),
+      element: (
+        <Badge.enmityDevs
+          url={badges.enmity?.contributor?.data.url.dark}
+          name={badges.enmity?.contributor?.data.name}
+        />
+      ),
     },
     {
       // @ts-ignore
       condition: badges.enmity[id]?.data?.name,
       // @ts-ignore
-      element: ( <Badge.enmityDevs url={badges.enmity[id]?.data?.url.dark} name={badges.enmity[id]?.data?.name} /> ),
+      element: (
+        <Badge.enmityDevs
+          url={badges.enmity[id]?.data?.url.dark}
+          name={badges.enmity[id]?.data?.name}
+        />
+      ),
     },
     { condition: badges.goosemod.dev, element: <Badge.gooseModDeveloper /> },
     { condition: badges.goosemod.sponsor, element: <Badge.gooseModSponsor /> },
     { condition: badges.goosemod.translator, element: <Badge.gooseModTranslator /> },
+    { condition: badges.vencord?.contributor, element: <Badge.vencordContributor /> },
+    {
+      condition: badges.vencord?.cutie,
+      element: (
+        <Badge.vencordCutie
+          name={badges.vencord?.cutie?.tooltip}
+          url={badges.vencord?.cutie?.image}
+        />
+      ),
+    },
   ];
 
   return badgeTypes.filter(({ condition }) => condition).map(({ element }) => element);

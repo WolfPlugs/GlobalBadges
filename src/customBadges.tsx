@@ -93,7 +93,9 @@ type Badges =
   | "enmityCustom"
   | "gooseModSponsor"
   | "gooseModDeveloper"
-  | "gooseModTranslator";
+  | "gooseModTranslator"
+  | "vencordContributor"
+  | "vencordCutie";
 
 export const getBadges = async (): Promise<
   Record<Badges, React.MemoExoticComponent<(args: BadgeArgs) => React.ReactElement>>
@@ -195,6 +197,22 @@ export const getBadges = async (): Promise<
     />
   ));
 
+  const vencordContributor = React.memo(() => (
+    <Base
+      children={
+        <img
+          src="https://cdn.discordapp.com/attachments/1033680203433660458/1092089947126780035/favicon.png"
+          style={{ width: "100%", height: "100%" }}
+        />
+      }
+      tooltip={"Vencord Contributor"}
+    />
+  ));
+
+  const vencordCutie = React.memo(({ url, name }: BadgeArgs) => (
+    <Base children={<img src={url} style={{ width: "100%", height: "100%" }} />} tooltip={name} />
+  ));
+
   return {
     bdDevs,
     customBadgesArray,
@@ -210,5 +228,7 @@ export const getBadges = async (): Promise<
     gooseModSponsor,
     gooseModDeveloper,
     gooseModTranslator,
+    vencordContributor,
+    vencordCutie,
   };
 };
