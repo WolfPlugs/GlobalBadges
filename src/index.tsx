@@ -166,7 +166,6 @@ async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadge
 }
 
 function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
-  console.log(badges.vencord?.cutie?.image);
   const badgeTypes = [
     {
       condition: badges.customBadgesArray,
