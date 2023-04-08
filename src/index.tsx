@@ -106,15 +106,19 @@ export async function start(): Promise<void> {
   }
   const Badge = await getBadges();
 
-  inject.after(
-    mod,
-    fnPropName,
-    (
-      _,
-      res: any,
-    ) => {
-      if (!res) return;
-      inject.after(res, "type", ([{ user: { id } }], res: any) => {
+  inject.after(mod, fnPropName, (_, res: any) => {
+    if (!res) return;
+    inject.after(
+      res,
+      "type",
+      (
+        [
+          {
+            user: { id },
+          },
+        ]: any,
+        res: any,
+      ) => {
         if (!res?.props?.children) return res;
         const [badges, setBadges] = React.useState<CustomBadges | null>(null);
 
@@ -143,9 +147,9 @@ export async function start(): Promise<void> {
         }
 
         return res;
-      });
-    },
-  );
+      },
+    );
+  });
 }
 
 async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadges> {
