@@ -110,15 +110,11 @@ export async function start(): Promise<void> {
     mod,
     fnPropName,
     (
-      [
-        {
-          user: { id },
-        },
-      ],
+      _,
       res: any,
     ) => {
       if (!res) return;
-      inject.after(res, "type", (args, res: any) => {
+      inject.after(res, "type", ([{ user: { id } }], res: any) => {
         if (!res?.props?.children) return res;
         const [badges, setBadges] = React.useState<CustomBadges | null>(null);
 
