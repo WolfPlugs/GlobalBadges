@@ -115,36 +115,39 @@ export async function start(): Promise<void> {
           user: { id },
         },
       ],
-      res,
+      res: any,
     ) => {
-      if (!res?.props?.children) return res;
-      const [badges, setBadges] = React.useState<CustomBadges | null>(null);
+      if (!res) return;
+      inject.after(res, "type", (args, res: any) => {
+        if (!res?.props?.children) return res;
+        const [badges, setBadges] = React.useState<CustomBadges | null>(null);
 
-      React.useEffect(() => {
-        (async () => {
-          await fetchBadges(id, setBadges);
-        })();
-      }, []);
+        React.useEffect(() => {
+          (async () => {
+            await fetchBadges(id, setBadges);
+          })();
+        }, []);
 
-      if (!badges) return res;
+        if (!badges) return res;
 
-      const { containerWithContent } = webpack.getByProps("containerWithContent") as Record<
-        string,
-        string
-      >;
+        const { containerWithContent } = webpack.getByProps("containerWithContent") as Record<
+          string,
+          string
+        >;
 
-      res.props.children = [...res.props.children, ...getBadgeselements(badges, Badge, id)];
+        res.props.children = [...res.props.children, ...getBadgeselements(badges, Badge, id)];
 
-      if (res.props.children.length > 0) {
-        if (!res.props.className.includes(containerWithContent)) {
-          res.props.className += ` ${containerWithContent}`;
+        if (res.props.children.length > 0) {
+          if (!res.props.className.includes(containerWithContent)) {
+            res.props.className += ` ${containerWithContent}`;
+          }
+          if (!res.props.className.includes("global-badges-container")) {
+            res.props.className += " global-badges-container";
+          }
         }
-        if (!res.props.className.includes("global-badges-container")) {
-          res.props.className += " global-badges-container";
-        }
-      }
 
-      return res;
+        return res;
+      });
     },
   );
 }
@@ -226,7 +229,9 @@ function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
       // @ts-ignore
       element: (
         <Badge.enmityDevs
+          // @ts-ignore
           url={badges.enmity[id]?.data?.url.dark}
+          // @ts-ignore
           name={badges.enmity[id]?.data?.name}
         />
       ),
