@@ -9,10 +9,15 @@ interface BadgeArgs {
   user: User;
 }
 
-type BadgeMod = (args: BadgeArgs) => React.ReactElement<{
-  children: React.ReactElement[];
-  className: string;
-}>;
+type BadgeMod = (args: BadgeArgs) => {
+  props: unknown;
+  type: (props: unknown) => {
+    props: {
+      className: string;
+      children: React.ReactElement[];
+    };
+  };
+};
 
 interface CustomBadges {
   customBadgesArray: {
@@ -99,6 +104,7 @@ export async function start(): Promise<void> {
   const mod = await webpack.waitForModule<Record<string, BadgeMod>>(
     webpack.filters.bySource(".GUILD_BOOSTER_LEVEL_1,"),
   );
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fnPropName = Object.entries(mod).find(([_, v]) => typeof v === "function")?.[0];
   if (!fnPropName) {
@@ -106,50 +112,49 @@ export async function start(): Promise<void> {
   }
   const Badge = await getBadges();
 
-  inject.after(mod, fnPropName, (_, res: any) => {
-    if (!res) return;
-    inject.after(
+  inject.after(
+    mod,
+    fnPropName,
+    (
+      [
+        {
+          user: { id },
+        },
+      ],
       res,
-      "type",
-      (
-        [
-          {
-            user: { id },
-          },
-        ]: any,
-        res: any,
-      ) => {
-        if (!res?.props?.children) return res;
-        const [badges, setBadges] = React.useState<CustomBadges | null>(null);
+    ) => {
+      const memoRes = res.type(res.props);
+      res.type = () => memoRes;
 
-        React.useEffect(() => {
-          (async () => {
-            await fetchBadges(id, setBadges);
-          })();
-        }, []);
+      const [badges, setBadges] = React.useState<CustomBadges | null>(null);
 
-        if (!badges) return res;
+      React.useEffect(() => {
+        (async () => {
+          await fetchBadges(id, setBadges);
+        })();
+      }, []);
 
-        const { containerWithContent } = webpack.getByProps("containerWithContent") as Record<
-          string,
-          string
-        >;
+      if (!badges) return res;
 
-        res.props.children = [...res.props.children, ...getBadgeselements(badges, Badge, id)];
+      const { containerWithContent } = webpack.getByProps("containerWithContent") as Record<
+        string,
+        string
+      >;
 
-        if (res.props.children.length > 0) {
-          if (!res.props.className.includes(containerWithContent)) {
-            res.props.className += ` ${containerWithContent}`;
-          }
-          if (!res.props.className.includes("global-badges-container")) {
-            res.props.className += " global-badges-container";
-          }
+      memoRes.props.children = [...memoRes.props.children, ...getBadgeselements(badges, Badge, id)];
+
+      if (memoRes.props.children.length > 0) {
+        if (!memoRes.props.className.includes(containerWithContent)) {
+          memoRes.props.className += ` ${containerWithContent}`;
         }
+        if (!memoRes.props.className.includes("global-badges-container")) {
+          memoRes.props.className += " global-badges-container";
+        }
+      }
 
-        return res;
-      },
-    );
-  });
+      return res;
+    },
+  );
 }
 
 async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadges> {
