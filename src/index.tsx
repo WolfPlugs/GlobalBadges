@@ -9,15 +9,10 @@ interface BadgeArgs {
   user: User;
 }
 
-type BadgeMod = (args: BadgeArgs) => {
-  props: unknown;
-  type: (props: unknown) => {
-    props: {
-      className: string;
-      children: React.ReactElement[];
-    };
-  };
-};
+type BadgeMod = (args: BadgeArgs) => React.ReactElement<{
+  children: React.ReactElement[][];
+  className: string;
+}>;
 
 interface CustomBadges {
   customBadgesArray: {
@@ -123,9 +118,6 @@ export async function start(): Promise<void> {
       ],
       res,
     ) => {
-      const memoRes = res.type(res.props);
-      res.type = () => memoRes;
-
       const [badges, setBadges] = React.useState<CustomBadges | null>(null);
 
       React.useEffect(() => {
@@ -140,15 +132,17 @@ export async function start(): Promise<void> {
         string,
         string
       >;
+      const firstChild = res.props.children[0];
+      if (!firstChild) return res;
 
-      memoRes.props.children = [...memoRes.props.children, ...getBadgeselements(badges, Badge, id)];
+      res.props.children[0] = [...firstChild, ...getBadgeselements(badges, Badge, id)];
 
-      if (memoRes.props.children.length > 0) {
-        if (!memoRes.props.className.includes(containerWithContent)) {
-          memoRes.props.className += ` ${containerWithContent}`;
+      if (firstChild.length > 0) {
+        if (!res.props.className.includes(containerWithContent)) {
+          res.props.className += ` ${containerWithContent}`;
         }
-        if (!memoRes.props.className.includes("global-badges-container")) {
-          memoRes.props.className += " global-badges-container";
+        if (!res.props.className.includes("global-badges-container")) {
+          res.props.className += " global-badges-container";
         }
       }
 
