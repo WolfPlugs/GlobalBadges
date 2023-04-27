@@ -119,7 +119,7 @@ export async function start(): Promise<void> {
       res,
     ) => {
       const [badges, setBadges] = React.useState<CustomBadges | null>(null);
-      console.log(res);
+
       React.useEffect(() => {
         (async () => {
           await fetchBadges(id, setBadges);
