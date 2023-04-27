@@ -10,7 +10,7 @@ interface BadgeArgs {
 }
 
 type BadgeMod = (args: BadgeArgs) => React.ReactElement<{
-  children: React.ReactElement[][];
+  children: React.ReactElement[];
   className: string;
 }>;
 
@@ -97,7 +97,7 @@ const REFRESH_INTERVAL = 1000 * 60 * 30;
 
 export async function start(): Promise<void> {
   const mod = await webpack.waitForModule<Record<string, BadgeMod>>(
-    webpack.filters.bySource(".GUILD_BOOSTER_LEVEL_1,"),
+    webpack.filters.bySource("getBadges()"),
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -119,7 +119,7 @@ export async function start(): Promise<void> {
       res,
     ) => {
       const [badges, setBadges] = React.useState<CustomBadges | null>(null);
-
+      console.log(res);
       React.useEffect(() => {
         (async () => {
           await fetchBadges(id, setBadges);
@@ -132,12 +132,11 @@ export async function start(): Promise<void> {
         string,
         string
       >;
-      const firstChild = res.props.children[0];
-      if (!firstChild) return res;
+      const theChildren = res?.props?.children;
+      if (!theChildren) return res;
+      res.props.children = [...theChildren, ...getBadgeselements(badges, Badge, id)];
 
-      res.props.children[0] = [...firstChild, ...getBadgeselements(badges, Badge, id)];
-
-      if (firstChild.length > 0) {
+      if (theChildren.length > 0) {
         if (!res.props.className.includes(containerWithContent)) {
           res.props.className += ` ${containerWithContent}`;
         }
