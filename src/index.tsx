@@ -18,6 +18,12 @@ interface CustomBadges {
   customBadgesArray: {
     badge: string;
     name: string;
+    badges: [
+      {
+        name: string;
+        badge: string;
+      },
+    ];
   };
   aliu: {
     dev: boolean;
@@ -134,7 +140,10 @@ export async function start(): Promise<void> {
       >;
       const theChildren = res?.props?.children;
       if (!theChildren) return res;
-      res.props.children = [...theChildren, ...getBadgeselements(badges, Badge, id)];
+      res.props.children = [
+        ...theChildren,
+        ...getBadgeselements(badges, Badge, id),
+      ] as React.ReactElement<any, string | React.JSXElementConstructor<any>>[];
 
       if (theChildren.length > 0) {
         if (!res.props.className.includes(containerWithContent)) {
@@ -169,13 +178,13 @@ async function fetchBadges(id: string, setBadges: Function): Promise<CustomBadge
 function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
   const badgeTypes = [
     {
-      condition: badges.customBadgesArray,
-      element: (
-        <Badge.customBadgesArray
-          url={badges.customBadgesArray.badge}
-          name={badges.customBadgesArray.name}
-        />
-      ),
+      condition: badges?.customBadgesArray,
+      element:
+        // loop the badges from customBadgesArray
+        badges?.customBadgesArray?.badges?.map((badge) => {
+          const key = `${badge.name}-${badge.badge}`;
+          return <Badge.customBadgesArray key={key} url={badge.badge} name={badge.name} />;
+        }),
     },
     { condition: badges.aliu.dev, element: <Badge.aliucordDeveloper /> },
     { condition: badges.aliu.contributor, element: <Badge.alucordContributors /> },
