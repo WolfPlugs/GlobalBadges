@@ -7,7 +7,7 @@
     "discordID": "347096063569559553",
     "github": "WolfPlugs"
   },
-  "version": "1.2.8",
+  "version": "1.2.9",
   "updater": {
     "type": "github",
     "id": "WolfPlugs/GlobalBadges"

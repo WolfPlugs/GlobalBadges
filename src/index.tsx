@@ -86,10 +86,12 @@ interface CustomBadges {
   };
   vencord: {
     contributor: boolean;
-    cutie: {
-      tooltip: string;
-      image: string;
-    };
+    cutie: [
+      {
+        tooltip: string;
+        image: string;
+      }
+    ];
   };
 }
 
@@ -249,12 +251,10 @@ function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
     { condition: badges.vencord?.contributor, element: <Badge.vencordContributor /> },
     {
       condition: badges.vencord?.cutie,
-      element: (
-        <Badge.vencordCutie
-          name={badges.vencord?.cutie?.tooltip}
-          url={badges.vencord?.cutie?.image}
-        />
-      ),
+      element:
+        badges.vencord?.cutie?.map((cutie) => (
+          <Badge.vencordCutie name={cutie.tooltip} url={cutie.image} />
+        )),
     },
   ];
 
