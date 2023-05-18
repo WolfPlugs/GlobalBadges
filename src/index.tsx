@@ -250,7 +250,7 @@ function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
     { condition: badges.goosemod.translator, element: <Badge.gooseModTranslator /> },
     { condition: badges.vencord?.contributor, element: <Badge.vencordContributor /> },
     {
-      condition: badges.vencord?.cutie,
+      condition: Boolean(badges.vencord?.cutie?.length),
       element: badges.vencord?.cutie?.map((cutie) => (
         <Badge.vencordCutie name={cutie.tooltip} url={cutie.image} />
       )),
