@@ -1,4 +1,4 @@
-import { common, components, webpack } from "replugged";
+import { common, components, util, webpack } from "replugged";
 import "./style.css";
 import Badges from "./Icons";
 const { React } = common;
@@ -100,7 +100,7 @@ type Badges =
 export const getBadges = async (): Promise<
   Record<Badges, React.MemoExoticComponent<(args: BadgeArgs) => React.ReactElement>>
 > => {
-  const openExternal = webpack.getBySource('.target="_blank";') as (url: string) => Promise<void>;
+  const { openExternal } = util;
   if (!openExternal) {
     throw new Error("Failed to find openExternal function");
   }
