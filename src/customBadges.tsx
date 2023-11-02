@@ -4,7 +4,6 @@ import Badges from "./Icons";
 const { React } = common;
 const { Tooltip, Clickable } = components;
 
-
 export enum BadgeSizes {
   SIZE_24,
   SIZE_22,

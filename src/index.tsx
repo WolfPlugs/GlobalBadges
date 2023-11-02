@@ -104,10 +104,9 @@ const cache = new Map<string, BadgeCache>();
 const REFRESH_INTERVAL = 1000 * 60 * 30;
 
 export async function start(): Promise<void> {
-  const mod = await webpack.waitForProps<{ BadgeSizes: BadgeSizes, default: BadgeMod }>("BadgeSizes")
-
-
-
+  const mod = await webpack.waitForProps<{ BadgeSizes: BadgeSizes; default: BadgeMod }>(
+    "BadgeSizes",
+  );
 
   const Badge = await getBadges();
 
