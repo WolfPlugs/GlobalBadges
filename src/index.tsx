@@ -1,6 +1,6 @@
 import { User } from "discord-types/general";
 import { Injector, common, webpack } from "replugged";
-import { getBadges } from "./customBadges";
+import { BadgeSizes, getBadges } from "./customBadges";
 const { React } = common;
 const inject = new Injector();
 
@@ -104,20 +104,16 @@ const cache = new Map<string, BadgeCache>();
 const REFRESH_INTERVAL = 1000 * 60 * 30;
 
 export async function start(): Promise<void> {
-  const mod = await webpack.waitForModule<Record<string, BadgeMod>>(
-    webpack.filters.bySource("getBadges()"),
-  );
+  const mod = await webpack.waitForProps<{ BadgeSizes: BadgeSizes, default: BadgeMod }>("BadgeSizes")
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const fnPropName = Object.entries(mod).find(([_, v]) => typeof v === "function")?.[0];
-  if (!fnPropName) {
-    throw new Error("Could not find badges function");
-  }
+
+
+
   const Badge = await getBadges();
 
   inject.after(
     mod,
-    fnPropName,
+    "default",
     (
       [
         {

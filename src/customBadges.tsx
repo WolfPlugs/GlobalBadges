@@ -4,6 +4,13 @@ import Badges from "./Icons";
 const { React } = common;
 const { Tooltip, Clickable } = components;
 
+
+export enum BadgeSizes {
+  SIZE_24,
+  SIZE_22,
+  SIZE_18,
+}
+
 type Tooltip = React.FC<{
   text?: string;
   position?: "top" | "bottom" | "left" | "right";
