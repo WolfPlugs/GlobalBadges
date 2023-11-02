@@ -1,7 +1,7 @@
 {
-  "name": "plugin-template",
+  "name": "globalbadges",
   "version": "1.3.3",
-  "description": "A plugin template",
+  "description": "Adds global badges to your profile",
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
