@@ -183,29 +183,29 @@ function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
           return <Badge.customBadgesArray key={key} url={badge.badge} name={badge.name} />;
         }),
     },
-    { condition: badges.aliu.dev, element: <Badge.aliucordDeveloper /> },
-    { condition: badges.aliu.contributor, element: <Badge.alucordContributors /> },
-    { condition: badges.aliu.donor, element: <Badge.aliucordDonor /> },
+    { condition: badges?.aliu.dev, element: <Badge.aliucordDeveloper /> },
+    { condition: badges?.aliu.contributor, element: <Badge.alucordContributors /> },
+    { condition: badges?.aliu.donor, element: <Badge.aliucordDonor /> },
     {
-      condition: typeof badges.aliu.custom === "object" && badges.aliu.custom != null,
-      element: <Badge.aliucordCustom url={badges.aliu.custom.url} name={badges.aliu.custom.text} />,
+      condition: typeof badges?.aliu.custom === "object" && badges.aliu.custom != null,
+      element: <Badge.aliucordCustom url={badges?.aliu.custom.url} name={badges?.aliu.custom.text} />,
     },
-    { condition: badges.bd.dev, element: <Badge.bdDevs /> },
+    { condition: badges?.bd.dev, element: <Badge.bdDevs /> },
     {
-      condition: badges.enmity?.supporter,
+      condition: badges?.enmity?.supporter,
       element: (
         <Badge.enmityDevs
-          url={badges.enmity?.supporter?.data.url.dark}
-          name={badges.enmity?.supporter?.data.name}
+          url={badges?.enmity?.supporter?.data.url.dark}
+          name={badges?.enmity?.supporter?.data.name}
         />
       ),
     },
     {
-      condition: badges.enmity?.staff,
+      condition: badges?.enmity?.staff,
       element: (
         <Badge.enmityDevs
-          url={badges.enmity?.staff?.data.url.dark}
-          name={badges.enmity?.staff?.data.name}
+          url={badges?.enmity?.staff?.data.url.dark}
+          name={badges?.enmity?.staff?.data.name}
         />
       ),
     },
@@ -213,40 +213,40 @@ function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
       condition: badges.enmity?.dev,
       element: (
         <Badge.enmityDevs
-          url={badges.enmity?.dev?.data.url.dark}
-          name={badges.enmity?.dev?.data.name}
+          url={badges?.enmity?.dev?.data.url.dark}
+          name={badges?.enmity?.dev?.data.name}
         />
       ),
     },
     {
-      condition: badges.enmity?.contributor,
+      condition: badges?.enmity?.contributor,
       element: (
         <Badge.enmityDevs
-          url={badges.enmity?.contributor?.data.url.dark}
-          name={badges.enmity?.contributor?.data.name}
+          url={badges?.enmity?.contributor?.data.url.dark}
+          name={badges?.enmity?.contributor?.data.name}
         />
       ),
     },
     {
       // @ts-ignore
-      condition: badges.enmity[id]?.data?.name,
+      condition: badges?.enmity[id]?.data?.name,
       // @ts-ignore
       element: (
         <Badge.enmityDevs
           // @ts-ignore
-          url={badges.enmity[id]?.data?.url.dark}
+          url={badges?.enmity[id]?.data?.url.dark}
           // @ts-ignore
-          name={badges.enmity[id]?.data?.name}
+          name={badges?.enmity[id]?.data?.name}
         />
       ),
     },
-    { condition: badges.goosemod.dev, element: <Badge.gooseModDeveloper /> },
-    { condition: badges.goosemod.sponsor, element: <Badge.gooseModSponsor /> },
-    { condition: badges.goosemod.translator, element: <Badge.gooseModTranslator /> },
-    { condition: badges.vencord?.contributor, element: <Badge.vencordContributor /> },
+    { condition: badges?.goosemod?.dev, element: <Badge.gooseModDeveloper /> },
+    { condition: badges?.goosemod?.sponsor, element: <Badge.gooseModSponsor /> },
+    { condition: badges?.goosemod?.translator, element: <Badge.gooseModTranslator /> },
+    { condition: badges?.vencord?.contributor, element: <Badge.vencordContributor /> },
     {
-      condition: Boolean(badges.vencord?.cutie?.length),
-      element: badges.vencord?.cutie?.map((cutie) => (
+      condition: Boolean(badges?.vencord?.cutie?.length),
+      element: badges?.vencord?.cutie?.map((cutie) => (
         <Badge.vencordCutie name={cutie.tooltip} url={cutie.image} />
       )),
     },
