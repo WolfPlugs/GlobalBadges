@@ -101,7 +101,8 @@ type Badges =
   | "gooseModDeveloper"
   | "gooseModTranslator"
   | "vencordContributor"
-  | "vencordCutie";
+  | "vencordCutie"
+  | "userpfp";
 
 export const getBadges = async (): Promise<
   Record<Badges, React.MemoExoticComponent<(args: BadgeArgs) => React.ReactElement>>
@@ -218,6 +219,10 @@ export const getBadges = async (): Promise<
   const vencordCutie = React.memo(({ url, name }: BadgeArgs) => (
     <Base children={<img src={url} style={{ width: "100%", height: "100%" }} />} tooltip={name} />
   ));
+  
+  const userpfp = React.memo(({ url, name }: BadgeArgs) => (
+    <Base children={<img src={url} style={{ width: "100%", height: "100%" }} />} tooltip={name} />
+  ));
 
   return {
     bdDevs,
@@ -236,5 +241,6 @@ export const getBadges = async (): Promise<
     gooseModTranslator,
     vencordContributor,
     vencordCutie,
+    userpfp,
   };
 };

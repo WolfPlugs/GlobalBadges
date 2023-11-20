@@ -1,104 +1,10 @@
-import { User } from "discord-types/general";
 import { Injector, common, webpack } from "replugged";
 import { BadgeSizes, getBadges } from "./customBadges";
+import { BadgeCache, BadgeMod, CustomBadges } from "./types";
+
 const { React } = common;
 const inject = new Injector();
 
-interface BadgeArgs {
-  guildId: string;
-  user: User;
-}
-
-type BadgeMod = (args: BadgeArgs) => React.ReactElement<{
-  children: React.ReactElement[];
-  className: string;
-}>;
-
-interface CustomBadges {
-  customBadgesArray: {
-    badge: string;
-    name: string;
-    badges: [
-      {
-        name: string;
-        badge: string;
-      },
-    ];
-  };
-  aliu: {
-    dev: boolean;
-    donor: boolean;
-    contributor: boolean;
-    custom: {
-      url: string;
-      text: string;
-    };
-  };
-  bd: {
-    dev: boolean;
-  };
-  enmity: {
-    supporter: {
-      data: {
-        name: string;
-        id: string;
-        url: {
-          dark: string;
-          light: string;
-        };
-      };
-    };
-    staff: {
-      data: {
-        name: string;
-        id: string;
-        url: {
-          dark: string;
-          light: string;
-        };
-      };
-    };
-    dev: {
-      data: {
-        name: string;
-        id: string;
-        url: {
-          dark: string;
-          light: string;
-        };
-      };
-    };
-    contributor: {
-      data: {
-        name: string;
-        id: string;
-        url: {
-          dark: string;
-          light: string;
-        };
-      };
-    };
-  };
-  goosemod: {
-    sponsor: boolean;
-    dev: boolean;
-    translator: boolean;
-  };
-  vencord: {
-    contributor: boolean;
-    cutie: [
-      {
-        tooltip: string;
-        image: string;
-      },
-    ];
-  };
-}
-
-type BadgeCache = {
-  badges: CustomBadges;
-  lastFetch: number;
-};
 
 const cache = new Map<string, BadgeCache>();
 const REFRESH_INTERVAL = 1000 * 60 * 30;
@@ -250,6 +156,7 @@ function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
         <Badge.vencordCutie name={cutie.tooltip} url={cutie.image} />
       )),
     },
+    { condition: badges?.userpfp, element: <Badge.userpfp url={badges?.userpfp} name={"UserPFP Badge"} /> },
   ];
 
   return badgeTypes.filter(({ condition }) => condition).map(({ element }) => element);
