@@ -153,7 +153,7 @@ function getBadgeselements(badges: CustomBadges, Badge: any, id: string) {
     {
       condition: Boolean(badges?.vencord?.cutie?.length),
       element: badges?.vencord?.cutie?.map((cutie) => (
-        <Badge.vencordCutie name={cutie.tooltip} url={cutie.image} />
+        <Badge.vencordCutie name={cutie.tooltip} url={cutie.badge} />
       )),
     },
     { condition: badges?.userpfp, element: <Badge.userpfp url={badges?.userpfp} name={"UserPFP Badge"} /> },

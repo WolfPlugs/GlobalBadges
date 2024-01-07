@@ -73,7 +73,7 @@ export interface CustomBadges {
     cutie: [
       {
         tooltip: string;
-        image: string;
+        badge: string;
       },
     ];
   };
